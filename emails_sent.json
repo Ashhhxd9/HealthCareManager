@@ -1,0 +1,122 @@
+[
+  {
+    "id": "meq2ir",
+    "timestamp": "2026-07-02T19:38:16.512Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "gfe26",
+    "timestamp": "2026-07-02T19:39:59.702Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "uw7koq",
+    "timestamp": "2026-07-02T19:41:17.869Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "hsllb4",
+    "timestamp": "2026-07-03T04:05:08.581Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "lgh5go",
+    "timestamp": "2026-07-03T04:30:05.657Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "ck2j2",
+    "timestamp": "2026-07-03T04:32:39.941Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "4slp4",
+    "timestamp": "2026-07-03T04:47:44.075Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "n5olsh",
+    "timestamp": "2026-07-03T18:07:24.544Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "m06cxc",
+    "timestamp": "2026-07-03T18:11:46.609Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "2iwbkj",
+    "timestamp": "2026-07-03T18:21:26.291Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "k3cj3",
+    "timestamp": "2026-07-03T18:37:16.395Z",
+    "to": "patient-verify@test.com",
+    "subject": "Test Integration Dispatch Check",
+    "bodyPreview": " This is a test notification payload. ...",
+    "html": "<p>This is a test notification payload.</p>",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  },
+  {
+    "id": "77csih",
+    "timestamp": "2026-07-03T18:40:57.405Z",
+    "to": "alice@test.com",
+    "subject": "Leave Request Approved: 2026-07-22",
+    "bodyPreview": "\n         \n           Leave Request Approved \n           Dear Dr. Dr. Alice Smith, \n           Your request for leave on  2026-07-22  has been  approv...",
+    "html": "\n        <div style=\"font-family: sans-serif; padding: 20px; color: #333; line-height: 1.5;\">\n          <h2 style=\"color: #38a169;\">Leave Request Approved</h2>\n          <p>Dear Dr. Dr. Alice Smith,</p>\n          <p>Your request for leave on <strong>2026-07-22</strong> has been <strong>approved</strong> by the administrator.</p>\n          <p>Your calendar availability for this date has been blocked. 0 conflicting appointment bookings were cancelled and affected patients have been notified.</p>\n          <br/>\n          <p>Best regards,<br/>Clinic Administration</p>\n        </div>\n      ",
+    "hasCalendarAttachment": false,
+    "calendarEvent": null
+  }
+]

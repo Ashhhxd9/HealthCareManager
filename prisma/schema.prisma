@@ -1,0 +1,101 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                 String               @id @default(uuid())
+  email              String               @unique
+  password           String
+  name               String
+  role               String               // 'PATIENT', 'DOCTOR', 'ADMIN'
+  createdAt          DateTime             @default(now())
+  doctorProfile      DoctorProfile?
+  patientAppointments Appointment[]       @relation("PatientAppointments")
+  doctorAppointments Appointment[]       @relation("DoctorAppointments")
+  slotHolds          SlotHold[]
+  reminders          MedicationReminder[]
+  leaveRequests      LeaveRequest[]
+}
+
+model DoctorProfile {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialisation    String
+  workingHoursStart String   // "09:00"
+  workingHoursEnd   String   // "17:00"
+  slotDuration      Int      // e.g. 30 in minutes
+  leaveDays         String   // Serialized dates "YYYY-MM-DD,YYYY-MM-DD"
+  googleRefreshToken String?
+  googleAccessToken  String?
+}
+
+model Appointment {
+  id                     String   @id @default(uuid())
+  patientId              String
+  patient                User     @relation("PatientAppointments", fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId               String
+  doctor                 User     @relation("DoctorAppointments", fields: [doctorId], references: [id], onDelete: Cascade)
+  appointmentTime        DateTime
+  status                 String   // 'BOOKED', 'CANCELLED_BY_PATIENT', 'CANCELLED_BY_DOCTOR'
+  symptoms               String
+  urgency                String?  // 'Low', 'Medium', 'High'
+  chiefComplaint         String?
+  suggestedQuestions     String?  // Serialized JSON array of 3 questions
+  postVisitNotes         String?
+  prescription           String?
+  postVisitSummary       String?  // AI generated post-visit summary
+  googleCalendarEventId  String?
+  createdAt              DateTime @default(now())
+}
+
+model SlotHold {
+  id        String   @id @default(uuid())
+  doctorId  String
+  slotTime  DateTime
+  heldById  String
+  heldBy    User     @relation(fields: [heldById], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+
+  @@unique([doctorId, slotTime])
+}
+
+model Notification {
+  id             String    @id @default(uuid())
+  recipientEmail String
+  subject        String
+  body           String
+  status         String    // 'PENDING', 'SENT', 'FAILED'
+  retryCount     Int       @default(0)
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+  scheduledFor   DateTime?
+}
+
+model MedicationReminder {
+  id         String    @id @default(uuid())
+  patientId  String
+  patient    User      @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  drugName   String
+  dosage     String
+  frequency  String    // 'morning', 'night', 'twice_daily', 'thrice_daily'
+  timeOfDay  String    // Serialized "08:00" or "08:00,20:00"
+  active     Boolean   @default(true)
+  lastSentAt DateTime?
+  createdAt  DateTime  @default(now())
+}
+
+model LeaveRequest {
+  id        String   @id @default(uuid())
+  doctorId  String
+  doctor    User     @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  leaveDate String   // "YYYY-MM-DD"
+  reason    String?
+  status    String   // 'PENDING', 'APPROVED', 'REJECTED'
+  createdAt DateTime @default(now())
+}
