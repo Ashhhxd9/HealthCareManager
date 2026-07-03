@@ -16,25 +16,24 @@ Navigate to the root directory and install dependencies:
 npm install
 ```
 
-### 3. Database Migration
+### 3. Database Migration & Schema Sync
 For local SQLite fallback, run migrations to generate the local database file:
 ```bash
 npx prisma migrate dev --name init
 ```
 
-For **Supabase (PostgreSQL)**, once you configure your connection string in `.env` (see step 4), push the schema directly to your Supabase project:
+For **Supabase (PostgreSQL)**, once you configure your connection string in `.env` (see step 4), push the schema directly to your Supabase project using the direct session port (5432):
 ```bash
-npx prisma db push
+npm run db:push
 ```
 
 ### 4. Configuration
 Create a `.env` file in the root directory. You can copy the template below:
 ```ini
-# For SQLite (default local fallback):
-DATABASE_URL="file:./dev.db"
-# For Supabase (PostgreSQL), uncomment below and plug details:
-# DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[REF].supabase.co:5432/postgres?schema=public"
+# For Supabase (PostgreSQL) direct/pooled connection:
+DATABASE_URL="postgresql://postgres.username:password@db.supabase.co:6543/postgres?pgbouncer=true"
 
+# Secret token used for signing session cookies
 JWT_SECRET="clinic_manager_super_secret_key"
 
 # Gemini API Integration (Leave as 'mock' for sandbox fallback mode)
@@ -63,6 +62,35 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
+## 📡 API Reference Directory
+
+### Authentication
+- `POST /api/auth/register`: Create patient/admin account.
+- `POST /api/auth/login`: Issue cookie JWT sessions.
+- `POST /api/auth/logout`: Clears authentication cookies.
+- `GET /api/auth/me`: Get active user profile context.
+
+### Patient Actions
+- `GET /api/appointments/slots`: Generates dynamic slots based on specialties, working hours, and leave states.
+- `POST /api/appointments/hold`: Transactionally reserve a slot hold.
+- `POST /api/appointments/book`: Confirms slot hold and schedules pending/confirmed appointments.
+- `POST /api/appointments/cancel`: Cancels patient appointments.
+- `POST /api/appointments/reminders`: Sets or toggles patient medication reminder triggers.
+
+### Doctor Actions
+- `POST /api/doctor/profile`: Save shift hours and select specialties.
+- `POST /api/doctor/approve`: Approve pending patient visits (confirms slot, triggers invitations).
+- `POST /api/doctor/reject`: Decline booking requests.
+- `POST /api/doctor/visit`: Log consultation notes and prescribe medications.
+- `POST /api/doctor/leave-request`: Submit doctor leave requests.
+
+### Administrator Actions
+- `GET/POST /api/admin/doctors`: Manage doctor accounts.
+- `POST /api/admin/leave-request/approve`: Approves a leave, blocks calendar, cancels conflicting patient slots, and notifies patients.
+- `POST /api/admin/leave-request/reject`: Rejects doctor leave request.
+
+---
+
 ## 🛠️ Sandbox Fallback Testing Mode (Zero-Setup Verification)
 If you do not have active API credentials, the system runs in a **high-fidelity sandbox fallback mode**:
 1. **Emails**: Sent emails are appended to `emails_sent.json` in the root folder, showing HTML templates and `.ics` files.
@@ -72,13 +100,14 @@ If you do not have active API credentials, the system runs in a **high-fidelity 
 ---
 
 ## 📋 Database Schema & Models
-The SQLite database consists of:
+The relational database consist of:
 - **User**: Name, email, hashed password, and role (`PATIENT`, `DOCTOR`, `ADMIN`).
 - **DoctorProfile**: Specialisation, working hours (Start/End), slot duration, leave days list, and Google Calendar tokens.
 - **Appointment**: Symptoms text, LLM urgency, chief complaint, doctor questions list, clinical logs, post-visit summary markdown, and calendar event ID.
 - **SlotHold**: Doctor ID, slot time, patient ID, and expiry timestamp (5-minute TTL unique constraint lock).
 - **Notification**: Target email, subject, body text, retry count, and status logs.
 - **MedicationReminder**: Patient ID, drug details, times of day, and active toggle state.
+- **LeaveRequest**: Doctor ID, requested date, reason description, and status (`PENDING`, `APPROVED`, `REJECTED`).
 
 ---
 
@@ -116,13 +145,10 @@ To configure real Google Calendar sync:
    - Add scopes: `.../auth/calendar.events` (read/write access to calendar events).
 4. Go to **Credentials**:
    - Create **OAuth 2.0 Client ID** choosing "Web Application".
-   - Add Authorized Redirect URI: `http://localhost:3000/api/oauth/callback`.
-5. Copy the Client ID and Secret to your `.env` file.
+   - Add Authorized Redirect URIs:
+     - `http://localhost:3000/api/oauth/callback`
+     - `https://[your-app-domain].vercel.app/api/oauth/callback`
+     - `http://localhost:3000/api/auth/google/callback`
+     - `https://[your-app-domain].vercel.app/api/auth/google/callback`
+5. Copy the Client ID and Secret to your `.env` / Vercel Environment variables.
 6. Log in as a Doctor, and click "Connect Google Calendar" to authorize syncing.
-
----
-
-## ⚙️ Background Jobs Runner
-To execute automated cron tasks (reminders, failed email retries, expired locks cleanup):
-*   Trigger the jobs endpoint: `GET /api/jobs/run`
-*   *Verification Tip*: You can access [http://localhost:3000/api/jobs/run?test=true](http://localhost:3000/api/jobs/run?test=true) in your browser to force-trigger all active medication reminders and watch `emails_sent.json` update in real-time.
