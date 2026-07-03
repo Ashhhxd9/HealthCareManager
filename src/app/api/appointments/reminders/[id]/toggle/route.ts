@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { getUserFromRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
 
-export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getUserFromRequest(req);
     if (!session || session.role !== "PATIENT") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const { id } = await context.params;
+    const { id } = await params;
     const { active } = await req.json();
 
     const reminder = await db.medicationReminder.findUnique({

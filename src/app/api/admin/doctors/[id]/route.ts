@@ -4,14 +4,14 @@ import { db } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
 import { deleteGoogleCalendarEvent } from "@/lib/googleCalendar";
 
-export async function PUT(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getUserFromRequest(req);
     if (!session || session.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const { id } = await context.params;
+    const { id } = await params;
     const body = await req.json();
     const { specialisation, workingHoursStart, workingHoursEnd, slotDuration, leaveDays, name, email } = body;
 
@@ -157,14 +157,14 @@ export async function PUT(req: Request, context: { params: Promise<{ id: string 
   }
 }
 
-export async function DELETE(req: Request, context: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getUserFromRequest(req);
     if (!session || session.role !== "ADMIN") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    const { id } = await context.params;
+    const { id } = await params;
 
     // Delete User (cascades to DoctorProfile and Appointments due to schema definitions)
     await db.user.delete({ where: { id } });
